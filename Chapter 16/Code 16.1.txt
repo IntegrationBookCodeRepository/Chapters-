@@ -1,0 +1,22 @@
+@RestResource(urlMapping='/getContacts/*')
+	global class ListContacts
+	{
+	@HttpGet
+
+	global static List<Contact>getcontact()
+	{
+	List<Contact>lst;
+	try
+	{
+	lst = [SELECT Name, Phone FROM Contact LIMIT 5];
+	return lst;
+	}
+	catch (Exception ex)
+
+	{ 
+
+	system.debug('Error'+ex.getmessage());
+	}
+	return lst;
+	}
+}

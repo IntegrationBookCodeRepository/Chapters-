@@ -1,0 +1,12 @@
+public class LN_Controller {
+
+	public LN_Controller(){}
+		@RemoteAction
+		public static void insertRec(string firstName, string lastName, string heading){
+		  LN_info_client__c ln = new LN_info_client__c ();
+		  ln.First_Name__c = firstName;
+		  ln.Last_Name__c = lastName;
+		  ln.Heading__c = heading;
+		  insert ln;
+		}
+}

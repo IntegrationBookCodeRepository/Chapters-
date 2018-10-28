@@ -1,0 +1,15 @@
+@RestResource(urlMapping='/deleteContactRecord/*')  
+	global class DeleteContact
+	{
+	@HttpDelete
+	global static void justDelete( )
+	{
+		Restrequest req = RestContext.request;
+		Restresponse res = RestContext.response;
+		String ContactId = req.requestURI.substring(req.requestURI.lastIndexOf('/')+1);
+		System.debug('ContactId:'+contactId);
+		Contact result = [SELECT Id, Name, Phone, Email FROM Contact WHERE Id = :contactId];
+		delete result;
+	}
+
+}

@@ -1,0 +1,63 @@
+global class YT_Controller {
+ public static string commentCount;
+ public static string likeCount;
+ public static string dislikeCount;
+ public static string viewCount;
+   public string myString{get; set;}
+   public YT_Controller(){
+   system.debug('myString------------- '+myString);
+   } 
+  
+  /*---------------------------------- method to fetch a youtube video details and map it to custom object record------------------------------------*/ 
+  @RemoteAction
+  global static void insertVideoDetails(String responseFromVf) {
+    system.debug('responseFromVf------------- '+responseFromVf);
+    
+    
+     JSONParser parser = JSON.createParser(responseFromVf);
+     
+      while (parser.nextToken() != null) {
+            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (parser.getText() == 'commentCount')) {
+                // Get the value.
+                parser.nextToken();                
+                commentCount = parser.getText();                
+                system.debug('commentCount= ' + commentCount);
+            }
+              if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (parser.getText() == 'likeCount')) {
+                // Get the value.
+                parser.nextToken();
+                
+                likeCount = parser.getText();
+                
+                system.debug('likeCount= ' + likeCount);
+            }
+            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (parser.getText() == 'dislikeCount')) {
+                // Get the value.
+                parser.nextToken();
+                
+                dislikeCount = parser.getText();
+                
+                system.debug('dislikeCount= ' + dislikeCount);
+            }
+            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (parser.getText() == 'viewCount')) {
+                // Get the value.
+                parser.nextToken();
+                
+                viewCount = parser.getText();
+                
+                system.debug('viewCount= ' + viewCount);
+            }
+        }
+        
+     YT_info_client__c YT = new YT_info_client__c();
+     YT.Views__c = viewCount;
+     YT.Likes__c = likeCount;
+     YT.Dislikes__c = dislikeCount;
+     YT.Comments__c = commentCount;
+     insert YT;
+   }
+}

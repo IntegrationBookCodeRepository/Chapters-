@@ -1,0 +1,11 @@
+public class fb_Controller {
+
+	public fb_Controller(){}
+		@RemoteAction
+		public static void insertRec(string firstName, string lastName){
+			  FB_info_client__c fb = new FB_info_client__c ();
+		fb.First_Name__c= firstName;
+		fb.Last_Name__c= lastName;
+			  insert fb;
+			}
+}

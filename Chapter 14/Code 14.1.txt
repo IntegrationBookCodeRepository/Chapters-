@@ -1,0 +1,84 @@
+public class Gmail_Client_Controller {
+	public static string resp{get; set;}
+		public static list<string> listIds {get; set;}
+		public static string msgs;
+		
+		  public static string subValue = '';
+		  public static string toValue = '';
+		  public static string fromValue = '';
+		  public static string dateValue = '';
+		  public static string body = '';
+		  
+		  public static list<string> ListToContainEmailBody = new list<string>();
+		
+	   
+		
+		 /*---------------------------------- method to fetch a specified email body and map it to custom object record------------------------------------*/
+		 @RemoteAction
+		 public static void fetchemail(string responseFromPage){
+			
+			
+			// parsing using JSON parser
+			  JSONParser parser = JSON.createParser(responseFromPage);
+			 
+			while (parser.nextToken() != null) {
+				if ((parser.getText() == 'Subject')) {
+					// Get the value.
+					parser.nextToken();
+					parser.nextToken();
+					subValue = parser.getText();
+					system.debug('value ---- '+subValue);               
+				}
+				 if ((parser.getText() == 'To')) {
+					// Get the value.
+					parser.nextToken();
+					parser.nextToken();
+					toValue = parser.getText();
+					system.debug('toValue---- '+toValue);               
+				}
+				 if ((parser.getText() == 'From')) {
+					// Get the value.
+					parser.nextToken();
+					parser.nextToken();
+					fromValue = parser.getText();
+					system.debug('fromValue---- '+fromValue);               
+				}
+				if ((parser.getText() == 'Date')) {
+					// Get the value.
+					parser.nextToken();
+					parser.nextToken();
+					dateValue = parser.getText();
+					system.debug('dateValue---- '+dateValue);               
+				}         
+				
+				   if ((parser.getText() == 'data')) {
+					// Get the value.
+					parser.nextToken();
+					
+					string bodyValue = parser.getText();
+					system.debug('bodyValue---- '+bodyValue); 
+					ListToContainEmailBody.add(bodyValue);
+				
+				}
+			}
+			
+					system.debug('ListToContainEmailBody---- '+ListToContainEmailBody);
+					blob decodedbody = EncodingUtil.base64Decode(ListToContainEmailBody[0]);
+					
+					
+					system.debug('decodedbody--------- '+decodedbody);
+					body = decodedbody.tostring();
+					system.debug('********decodedbody:' + body);
+							 
+		  GM_info_client__c GE = new GM_info_client__c();
+		  GE.To__c = toValue;
+		  GE.From__c = fromValue;
+		  GE.Date__c =dateValue;
+		  GE.Subject__c = subValue;
+		  GE.Body__c = body;
+		  insert GE;
+		 }
+     
+ 
+      
+}

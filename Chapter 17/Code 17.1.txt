@@ -1,0 +1,27 @@
+Import com.sforce.soap.enterprise.Connector;
+Import com.sforce.soap.enterprise.EnterpriseConnection;
+Import com.sforce.ws.ConnectionException;
+Import com.sforce.ws.ConnectorConfig;
+
+publicclass Main {
+staticfinal String USERNAME = "Add your Org Username here";
+staticfinal String PASSWORD = "Enter Org Password and Security Token both appended here";
+staticEnterpriseConnectionconnection;
+
+publicstaticvoid main(String[] args) {
+ConnectorConfigconfig = newConnectorConfig();
+config.setUsername(USERNAME);
+config.setPassword(PASSWORD);
+try {
+connection = Connector.newConnection(config);
+// display some current settings
+System.out.println("AuthEndPoint:"+config.getAuthEndpoint());
+System.out.println("Service EndPoint:"+config.getServiceEndpoint());
+System.out.println("Username:"+config.getUsername());
+System.out.println("SessionId:"+config.getSessionId());
+System.out.println("Connected Successfully");
+        } catch (ConnectionExceptione1) {
+e1.printStackTrace();
+        }
+   }
+}

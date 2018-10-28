@@ -1,0 +1,38 @@
+public class GoogleDriveController {
+private String code;
+
+public boolean val {get;set;}
+
+public blob file{get;set;}
+
+public String filetype{get;set;}
+   
+public String filename {get;set;}
+
+     
+
+
+            public void UploadFile() {
+            String boundary = '----------9889464542212';
+            String delimiter = '\r\n--' + boundary + '\r\n';
+            String close_delim = '\r\n--' + boundary + '--';
+            String bodyEncoded = EncodingUtil.base64Encode(file);
+            String body = delimiter + 'Content-Type: application/json\r\n\r\n' + '{ "title" : "' + filename + '",' + ' "mimeType" : "' + filetype + '" }' + delimiter + 'Content-Type: ' + filetype + '\r\n' + 'Content-Transfer-Encoding: base64\r\n' + '\r\n' + bodyEncoded + close_delim;
+            Http http = new Http();
+            HttpRequest req = new HttpRequest();
+            req.setEndpoint('https://www.googleapis.com/upload/drive/v2/files?uploadType=multipart');
+            req.setHeader('Authorization', 'Bearer ' + 'ya29.GlskBjtk17Hy5Ed_eGYrZBC3oA-onjpOKGkMm_R5bn02I5S2K08DpoiLqmH8H0x4-RDBzbAn9173e-idHb84RoRX8KOOMxXMNfx7QEZMw3oJTQtk4OnpXAtfUHNu');
+            req.setHeader('Content-Type', 'multipart/mixed; boundary="' + boundary + '"');
+            req.setHeader('Content-length', String.valueOf(body.length()));
+            req.setBody(body);
+            req.setMethod('POST');
+            req.setTimeout(60 * 1000);
+            HttpResponse resp = http.send(req);
+            system.debug('resp----- '+resp);
+            file = null;
+            filetype = '';
+            filename = '';
+            }
+
+      
+}

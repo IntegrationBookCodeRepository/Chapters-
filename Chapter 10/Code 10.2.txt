@@ -1,0 +1,20 @@
+<apex:page controller="GoogleDriveController" showHeader="false">
+
+	<center>
+		<apex:form >
+			<apex:pageblock >
+
+				<apex:inputfile value="{!file}" contentType="{!filetype}" filename="{!filename}" />
+				<br/>
+				<br/>
+				<apex:commandButton styleClass="myClass" onclick="this.value = 'Uploading...'" value="Upload file" action="{!UploadFile}" />
+				<br/>
+				<br/>
+				<apex:messages styleClass="error" />
+				<br/>
+			</apex:pageblock>
+
+		</apex:form>
+	</center>
+</apex:page>
+                                  

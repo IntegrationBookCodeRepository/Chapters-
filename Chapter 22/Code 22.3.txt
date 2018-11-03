@@ -1,0 +1,19 @@
+@isTest
+private class TestClass_LinkedIn {
+     @isTest static void test_linkedIn(){
+
+			 // This causes a fake response to be sent from the class that implements HttpCalloutMock
+		Test.setMock(HttpCalloutMock.class, new LinkedInHttpCalloutMock());
+
+		LinkedIn_Custom_Setting__c LI_CS = new LinkedIn_Custom_Setting__c();
+		LI_CS.Name = 'LinkedIn Endpoint';
+		LI_CS.Value__c = 'test';
+		insert LI_CS;
+
+		Test.startTest();
+		LinkedinProfileDetails2.details();
+		Test.stopTest();
+
+
+    }
+}

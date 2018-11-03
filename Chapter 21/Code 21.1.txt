@@ -1,0 +1,11 @@
+@RestResource(urlMapping='/v1/getCase/*')
+  global with sharing class getCase {
+    @Httpget
+     global static list<case> fetchContact(){
+       RestRequest req = RestContext.request;
+       RestResponse res = Restcontext.response;
+       Id conId = req.requestURI.substring(req.requestURI.lastIndexOf('/')+1);
+       list<case> caseList = [select id, subject, status, priority from case where contactid = :conId ];
+       return caseList;
+     }
+  }                   

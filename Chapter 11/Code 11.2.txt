@@ -1,96 +1,88 @@
 <apex:page showHeader="false" controller="fb_Controller">
-<div id="fb-root"></div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-<!-- (i) Create a HTML button and output Text elements   -->
-
-<input type="button" id="loginButton" value="Login to FB"></input>
-<div>
-First Name: <output type= "text" id="fname" /><br/>
-Last Name: <output type= "text" id = "lname"/><br/>
-
-</div>
-
-<script>
-var j$ = jQuery.noConflict();
-window.fbAsyncInit = function() {
-// (ii) Initiate and setup the Facebook Javascript SDK using FB.init () method
-
-FB.init({
- appId      : '549742655463212', // App ID from the App Dashboard
-// appId : '700632006991430',
-version    : 'v2.10',
-channelUrl : '/resource/alljs', // Channel File for x-domain communication--- added the sdk in static resource.
-status     : true, // check the login status upon init?
-cookie     : true, // set sessions cookies to allow your server to access the session?
-xfbml      : true  // parse XFBML tags on this page?
-});
-// Additional initialization code such as adding Event Listeners goes here
-};
-// Load the SDK's source Asynchronously
-// Note that the debug version is being actively developed and might
-// contain some type checks that are overly strict.
-// Please report such bugs using the bugs tool.
-(function(d, debug){
-var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-if (d.getElementById(id)) {return;}
-js = d.createElement('script'); js.id = id; js.async = true;
-js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
-ref.parentNode.insertBefore(js, ref);
-}(document, /*debug*/ false));
-//  When a page loads
-j$(document).ready(function()
-{
-//(iii) On click of a button ìLogin to FBî render the forthcoming profile information in the HTML output Tags 
-j$("#loginButton").click(function()
-{
-FB.login(function(response)
-{
-if (response.authResponse)
-{
-console.log('access token---- '+response);
-console.log('Welcome!  Fetching your information.... ');
-FB.api('/me', {fields: 'first_name, last_name'}, function(response) {
-document.getElementById("fname").value = response.first_name;
-document.getElementById("lname").value = response.last_name;
-
-
- // (iv)    Insert a record in Fb_info_client object by invoking Javascript Remoting technique 
-       var firstName = response.first_name;
-       var lastName = response.last_name;
-       var email1 = response.email;
-       var gender = response.gender;
-  
+    <div id="fb-root"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     
-     Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.fb_Controller.insertRec}',
-            firstName , lastName,
-            function(result, event){
-                if (event.status) {
-                    // Get DOM IDs for HTML and Visualforce elements like this
-                   alert('one new record is created in FB_info_client object');
-                } else if (event.type === 'exception') {
-                    document.getElementById("responseErrors").innerHTML = 
-                        event.message + "<br/>\n<pre>" + event.where + "</pre>";
-                } else {
-                    document.getElementById("responseErrors").innerHTML = event.message;
-                }
-            }, 
-            {escape: true}
-        );
-       
+    <!--(i) Create a HTML button and output Text elements  -->
+    <input type="button" id="loginButton" value="Login to FB"></input>
+    <div>
+        First Name: <output type= "text" id="fname" /><br/>
+        Last Name: <output type= "text" id = "lname"/><br/>   
+    </div>
     
-        console.log('Good to see you, ' + response.first_name+' '+response.last_name+ '.');
-        console.log('Make response a string' + JSON.stringify(response));
-     });
-   } else {
-     console.log('User cancelled login or did not fully authorize.');
-   }
-   });
-  
- });
- 
- });
-</script>
+    <script>
+            var j$ = jQuery.noConflict();
+            window.fbAsyncInit = function() {
+            // (ii) Initiate and setup the Facebook Javascript SDK using FB.init () method
+            
+            FB.init({
+            appId      : '549742655463212', // App ID from the App Dashboard
+            version    : 'v2.10',
+            channelUrl : '/resource/alljs', 
+            status     : true, // it is to check the login status on sdk initialization
+            
+            });
+            };
+            // Load Facebook javascript SDK's source Asynchronously
+            (function(e, log){
+            var jscript; 
+            var scriptId = 'facebook-jssdk';
+            var reference = e.getElementsByTagName('script')[0];
+            if (e.getElementById(scriptId)) {return;}
+            jscript = e.createElement('script'); jscript.scriptId = scriptId; jscript.async = true;
+            jscript.src = "//connect.facebook.net/en_US/all" + (log ? "/log" : "") + ".js";
+             reference.parentNode.insertBefore(jscript, reference);
+            }(document, /*log*/ false));
+            //  When a page loads
+            j$(document).ready(function()
+                {
+                //(iii) On click of a button ‚ÄúLogin to FB‚Äù render the forthcoming profile information in the HTML output Tags 
+                j$("#loginButton").click(function()
+                {
+                FB.login(function(response)
+                {
+                if (response.authResponse)
+                {
+                console.log('access token---- '+response);
+                FB.api('/me', {fields: 'first_name, last_name'}, function(response) {
+                document.getElementById("fname").value = response.first_name;
+                document.getElementById("lname").value = response.last_name;
+            
+            
+             // (iv)    Insert a record in Fb_info_client object by invoking Javascript Remoting technique 
+                   var firstName = response.first_name;
+                   var lastName = response.last_name;
+                   var email1 = response.email;
+                   var gender = response.gender;
+              
+                
+                 Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.fb_Controller.insertRec}',
+                        firstName , lastName,
+                        function(result, event){
+                            if (event.status) {
+                                // Get DOM IDs for HTML and Visualforce elements like this
+                               alert('one new record is created in FB_info_client object');
+                            } else if(event.type === 'exception') {
+                                alert('You got this exception - '+event.message);
+                            } 
+                        }, 
+                        {escape: true}
+                    );
+                   
+                
+                    console.log('First Name -  ' + response.first_name);
+                    console.log('Last Name - '+response.last_name);
+                    console.log('Make response a string' + JSON.stringify(response));
+                 });
+               } else {     
+                 alert('User must be authorized first by logging in');
+               }
+               });
+              
+             });
+             
+             });
+    </script>
 
 </apex:page>
+

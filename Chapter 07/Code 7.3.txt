@@ -1,10 +1,10 @@
 {!REQUIRESCRIPT( "/soap/ajax/35.0/connection.js" )} 
 {!REQUIRESCRIPT( "/soap/ajax/35.0/apex.js" )} 
 
-var v = { 
-"recordid":"{!LinkedIn_info__c.Id}" 
-} 
+var LNvar = {
+"linkedInRecordid":"{!LinkedIn_info__c.Id}"
+}
 
-sforce.apex.execute( "LinkedIn_Pro_Details_onRecord", "details", v); 
+sforce.apex.execute( "LinkedIn_Pro_Details_onRecord", "details", LNvar); 
 
 location.reload( );

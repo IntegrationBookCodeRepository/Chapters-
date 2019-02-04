@@ -1,199 +1,175 @@
+<!--
+Copyright 2019 Lalit Kumar 
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.  -->
+
+
 <apex:page showHeader="false" controller="Gmail_Client_Controller">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"/>
-	<html>
-	  <head>
-		<meta charset='utf-8' />
-	  </head>
-	  <body>
-		
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"/>
 
-		<!--Add buttons to initiate auth sequence and sign out-->
-	 <center>   <button id="authorize-button" style="display: none;">Authorize</button>   </center>
-	 <center>   <button id="signout-button" style="display: none;">Sign Out</button>   </center>
-	 <center> <button id="insertRecord">Insert Record</button> </center>
-		<output type= "text" id="v" /><br/>
-		<pre id="content"></pre>
-	   
-		
-		<script type="text/javascript">
-		  // Client ID and API key from the Developer Console
-		  var CLIENT_ID = '285775623436-vke0ardqpa63rkuc44cpnnhg7ma2lelu.apps.googleusercontent.com';
+<html>
+  <head>
+    <meta charset='utf-8' />
+  </head>
+  <body>
+    
 
-		  // Array of API discovery doc URLs for APIs used by the quickstart
-		  var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
+    <!--Add authorize and signout buttons-->
+ <center>   <button id="authorize" style="display: none;">Authorize</button>   </center>
+ <center>   <button id="signout" style="display: none;">Sign Out</button>   </center>
+ <center> <button id="insertRecord">Insert Record</button> </center>
+    <output type= "text" id="emailId" /><br/>
+    
+   
+    
+    <script type="text/javascript">
 
-		  // Authorization scopes required by the API; multiple scopes can be
-		  // included, separated by spaces.
-		  var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+      var authButton = document.getElementById('authorize');
+      var signoutButton = document.getElementById('signout');
+ 
+     $(document).ready(function(){
+        // called initializeClient once Google library loaded 
+          gapi.load('client:auth2', userLoginState);    
+      });
+    
+      /**
+       *  API client library is initialized using initializeClient() and tracks user-login state
+       */
+      function initializeClient() {
+        gapi.client.init({
+          discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"],
+          clientId: '285775623436-vke0ardqpa63rkuc44cpnnhg7ma2lelu.apps.googleusercontent.com',
+          scope: 'https://www.googleapis.com/auth/gmail.readonly'
+        });
+      }
+      
+      async function userLoginState() {
+            await initializeClient();
+            // Track the user's sign-in state 
+            gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+            // The following function handles the initial sign-in state
+            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+            authButton.onclick = handleAuthClick;
+            signoutButton.onclick = handleSignoutClick;
+           
+        }
 
-		  var authorizeButton = document.getElementById('authorize-button');
-		  var signoutButton = document.getElementById('signout-button');
+      /**
+       *  Called when the signed in status changes, to update the UI
+       *  appropriately. After a sign-in, the API is called. Replace the author's Gmail account id with your own id here
+       */
+        var gmail_Id = 'kunwar.research@gmail.com';
+      function updateSigninStatus(isSignedIn) {
+        if (isSignedIn) {
+          authButton.style.display = 'none';
+          signoutButton.style.display = 'block';
+          
+     //  invoking the method which lists the ids from the associated email account.
+          listMessages(gmail_Id );
+          
+    //  invoking a method which brings the information related to an email
+    //  we have passed a static id of an email as a parameter for demonstration purpose, you can make it dynamic.
+         getMessage(gmail_Id, '16648aa9b4444d5d');
+         
+           } else {
+          authButton.style.display = 'block';
+          signoutButton.style.display = 'none';
+        }
+      }
 
-		  /**
-		   *  On load, called to load the auth2 library and API client library.
-		   */
-		  function handleClientLoad() {
-			gapi.load('client:auth2', initClient);
-		  }
+      /**
+       *  Sign in the user upon button click.
+       */
+      function handleAuthClick(event) {
+        gapi.auth2.getAuthInstance().signIn();
+      }
 
-		  /**
-		   *  Initializes the API client library and sets up sign-in state
-		   *  listeners.
-		   */
-		  function initClient() {
-			gapi.client.init({
-			  discoveryDocs: DISCOVERY_DOCS,
-			  clientId: CLIENT_ID,
-			  scope: SCOPES
-			}).then(function () {
-			  // Listen for sign-in state changes.
-			  gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+      /**
+       *  Sign out the user upon button click.
+       */
+      function handleSignoutClick(event) {
+        gapi.auth2.getAuthInstance().signOut();
+      }
 
-			  // Handle the initial sign-in state.
-			  updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-			  authorizeButton.onclick = handleAuthClick;
-			  signoutButton.onclick = handleSignoutClick;
-			});
-		  }
+      
+      /**
+       * Print list of all email ids from authorized user's inbox.      
+       */
+   
+  function listMessages(userId) {  
+  var getListOfMsgIds = function(request, result) {
+    request.execute(function(resp) {
+      result = result.concat(resp.messages);   
+       //The JSON.stringify() method converts a JavaScript value to a JSON string  
+     var stringified = JSON.stringify(result);
+     console.log('stringified------ '+stringified);     
+     JSON.parse(stringified, (key, value) => {
+          if (key === 'id') {
+          console.log('id---------- '+value);
+          var div = document.getElementById('emailId');
+         div.innerHTML += value + '<br/>';
+       
+          }
+         });
+ 
+    });
+  };
+  var initialRequest = gapi.client.gmail.users.messages.list({
+    'userId': userId,
+    
+  });
+   getListOfMsgIds(initialRequest, []);
+}
 
-		  /**
-		   *  Called when the signed in status changes, to update the UI
-		   *  appropriately. After a sign-in, the API is called.
-		   */
-			var gmail_Id = 'kunwar.research@gmail.com';
-		  function updateSigninStatus(isSignedIn) {
-			if (isSignedIn) {
-			  authorizeButton.style.display = 'none';
-			  signoutButton.style.display = 'block';
-			  
-		 //  invoking the method which lists the ids from the associated email account.
-			  listMessages(gmail_Id );
-			  
-		//  invoking a method which brings the information related to an email
-		//  we have passed a static id of an email as a parameter for demonstration purpose, you can make it dynamic.
-			 getMessage(gmail_Id, '16648aa9b4444d5d');
-			 
-			   } else {
-			  authorizeButton.style.display = 'block';
-			  signoutButton.style.display = 'none';
-			}
-		  }
+// getMessage function is to get the Email content and invoked above with a static id
+// and pass it to controller method using javascript remoting
 
-		  /**
-		   *  Sign in the user upon button click.
-		   */
-		  function handleAuthClick(event) {
-			gapi.auth2.getAuthInstance().signIn();
-		  }
-
-		  /**
-		   *  Sign out the user upon button click.
-		   */
-		  function handleSignoutClick(event) {
-			gapi.auth2.getAuthInstance().signOut();
-		  }
-
-		  /**
-		   * Append a pre element to the body containing the given message
-		   * as its text node. Used to display the results of the API call.
-		   *
-		   * @param {string} message Text to be placed in pre element.
-		   */
-		  function appendPre(message) {
-			var pre = document.getElementById('content');
-			var textContent = document.createTextNode(message + '\n');
-			pre.appendChild(textContent);
-		  }
-
-		  /**
-		   * Print list of all email's id in the authorized user's inbox.      
-		   */
-	   
-	  function listMessages(userId, query) {
-	  
-	  var getListOfMsgIds = function(request, result) {
-		request.execute(function(resp) {
-		  result = result.concat(resp.messages);
-		  var nextPageToken = resp.nextPageToken;
-		  if (nextPageToken) {
-			request = gapi.client.gmail.users.messages.list({
-			  'userId': userId,
-			  'pageToken': nextPageToken,
-			  'q': query
-			});
-			 console.log(result);
-			 
-		   
-			 
-		   //The JSON.stringify() method converts a JavaScript value to a JSON string  
-		 var stringified = JSON.stringify(result);
-		 console.log('stringified------ '+stringified);
-		 
-		 JSON.parse(stringified, (key, value) => {
-			  if (key === 'id') {
-			  console.log('id---------- '+value);
-			  var div = document.getElementById('v');
-
-			 div.innerHTML += value + '<br/>';
-		 
-				
-			  }
-			  });
-			
-		  } else {
-		 //   callback(result);
-		 
-		  }
-		});
-	  };
-	  var initialRequest = gapi.client.gmail.users.messages.list({
-		'userId': userId,
-		'q': query
-	  });
-	  getListOfMsgIds(initialRequest, []);
-	}
-
-	// getMessage function is to get the Email content and invoked above with a static id
-	// and pass it to controller method using javascript remoting
-
-	function getMessage(userId, messageId) {
-	  var request = gapi.client.gmail.users.messages.get({
-		'userId': userId,
-		'id': messageId
-	  });
-	  request.execute(function(resp) {
-		  
-		  console.log('result------------ '+resp);
-		  var stringifiedEmail = JSON.stringify(resp);
-	   // now stringifieldEmail has the email content in the form of javascript string   
-		  console.log('stringifiedEmail------------ '+stringifiedEmail);
-		  
-	   // javascript remoting used to send the response(stringified email content) to the controller
-	   $('#insertRecord').click(function() {
-			Visualforce.remoting.Manager.invokeAction(
-				'{!$RemoteAction.Gmail_Client_Controller.fetchemail}',
-				 stringifiedEmail, 
-				function(result, event){
-					if (event.status) {
-						// Get DOM IDs for HTML and Visualforce elements like this
-					   alert('New record is inserted');
-					} else if (event.type === 'exception') {
-					   alert('failure');
-					} 
-				}
-			 );
-			}); 
-		});
-	}
-		  
-								
-		</script>
-		
-		
-		<script async="" defer="" src="https://apis.google.com/js/api.js"
-		  onload="this.onload=function(){};handleClientLoad()"
-		  onreadystatechange="if (this.readyState === 'complete') this.onload()">
-		</script>
-	  </body>
-	</html>
+function getMessage(userId, messageId) {
+  var request = gapi.client.gmail.users.messages.get({
+    'userId': userId,
+    'id': messageId
+  });
+  request.execute(function(resp) {
+      
+      console.log('result------------ '+resp);
+      var stringifiedEmail = JSON.stringify(resp);
+   // now stringifieldEmail has the email content in the form of javascript string   
+      console.log('stringifiedEmail------------ '+stringifiedEmail);
+      
+   // javascript remoting used to send the response(stringified email content) to the controller
+   $('#insertRecord').click(function() {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.Gmail_Client_Controller.fetchemail}',
+             stringifiedEmail, 
+            function(result, event){
+                if (event.status) {
+                    // Get DOM IDs for HTML and Visualforce elements like this
+                   alert('New record is inserted');
+                } else if (event.type === 'exception') {
+                   alert('failure');
+                } 
+            }
+         );
+        }); 
+    });
+}
+      
+                            
+    </script>
+    
+    <script async="" defer="" src="https://apis.google.com/js/api.js">
+    </script>
+  </body>
+</html>
 </apex:page>
+

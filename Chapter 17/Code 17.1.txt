@@ -1,27 +1,6 @@
-Import com.sforce.soap.enterprise.Connector;
-Import com.sforce.soap.enterprise.EnterpriseConnection;
-Import com.sforce.ws.ConnectionException;
-Import com.sforce.ws.ConnectorConfig;
+The code is available at the link given below: 
+https://github.com/asagarwal/salesforce-soap-api-with-java/blob/master/salesforce_soap_api_1.java
 
-publicclass Main {
-staticfinal String USERNAME = "Add your Org Username here";
-staticfinal String PASSWORD = "Enter Org Password and Security Token both appended here";
-staticEnterpriseConnectionconnection;
-
-publicstaticvoid main(String[] args) {
-ConnectorConfigconfig = newConnectorConfig();
-config.setUsername(USERNAME);
-config.setPassword(PASSWORD);
-try {
-connection = Connector.newConnection(config);
-// display some current settings
-System.out.println("AuthEndPoint:"+config.getAuthEndpoint());
-System.out.println("Service EndPoint:"+config.getServiceEndpoint());
-System.out.println("Username:"+config.getUsername());
-System.out.println("SessionId:"+config.getSessionId());
-System.out.println("Connected Successfully");
-        } catch (ConnectionExceptione1) {
-e1.printStackTrace();
-        }
-   }
-}
+To successfully run the code the following needs to be done: 
+1. Set USERNAME to your Salesforce Org’s Username
+2. Set PASSWORD to your Salesforce Org’s Password followed by the security token

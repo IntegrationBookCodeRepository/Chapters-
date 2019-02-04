@@ -1,38 +1,38 @@
 public class GoogleDriveController {
-private String code;
 
-public boolean val {get;set;}
 
-public blob file{get;set;}
-
-public String filetype{get;set;}
+    public String name{get;set;}  // uploaded file name
+    public blob file{get;set;} // upload file from page
+    public String type{get;set;}  // uploaded file type
+    
    
-public String filename {get;set;}
+     // method to upload file in Google drive
+           public void fileUploadMethod() {
+           string endpoint = 'https://www.googleapis.com/upload/drive/v2/files?uploadType=multipart';
+           String boundary = '----------2345677876652';
+           String delimiter = '\r\n--' + boundary + '\r\n';
+           String delimiter_close = '\r\n--' + boundary + '--';
+           String encodedBody = EncodingUtil.base64Encode(file);
+           string contentType = 'Content-Type: application/json\r\n\r\n' ;
+           string fileContentType = 'Content-Type: '+ type+'\r\n';
+           String body = delimiter + contentType +'{ "title" : "' + name + '",' + ' "mimeType" : "' + type + '" }' + delimiter + fileContentType +  'Content-Transfer-Encoding: base64\r\n' + '\r\n' + encodedBody + delimiter_close;
+           string bodyLength = String.valueOf(body.length());
+
+           string authorizationHeader = 'Bearer ' + 'ya29.GludBvqIY4cRgBPJiKwSoRNmua6dbkrU-n5wBrvx-xeTm_rgngtIqbqr1nU28RnLR14St41b8mBeXF8PxrYpxRulby0Dd1oZ_tRn21zrIdhcsJPvwq3H2ZnIwrOj';
+
+           Http httpcls = new Http();
+           HttpRequest request = new HttpRequest();
+           request.setEndpoint(endpoint);
+           request.setHeader('Authorization', authorizationHeader);
+           request.setHeader('Content-Type', 'multipart/mixed; boundary="' + boundary + '"');
+           request.setHeader('Content-length', bodyLength);
+           request.setBody(body);
+           request.setMethod('POST');
+           request.setTimeout(80000);
+           HttpResponse response = httpcls.send(request);
+           system.debug('response----- '+response);
+         
+           }
 
      
-
-
-            public void UploadFile() {
-            String boundary = '----------9889464542212';
-            String delimiter = '\r\n--' + boundary + '\r\n';
-            String close_delim = '\r\n--' + boundary + '--';
-            String bodyEncoded = EncodingUtil.base64Encode(file);
-            String body = delimiter + 'Content-Type: application/json\r\n\r\n' + '{ "title" : "' + filename + '",' + ' "mimeType" : "' + filetype + '" }' + delimiter + 'Content-Type: ' + filetype + '\r\n' + 'Content-Transfer-Encoding: base64\r\n' + '\r\n' + bodyEncoded + close_delim;
-            Http http = new Http();
-            HttpRequest req = new HttpRequest();
-            req.setEndpoint('https://www.googleapis.com/upload/drive/v2/files?uploadType=multipart');
-            req.setHeader('Authorization', 'Bearer ' + 'ya29.GlskBjtk17Hy5Ed_eGYrZBC3oA-onjpOKGkMm_R5bn02I5S2K08DpoiLqmH8H0x4-RDBzbAn9173e-idHb84RoRX8KOOMxXMNfx7QEZMw3oJTQtk4OnpXAtfUHNu');
-            req.setHeader('Content-Type', 'multipart/mixed; boundary="' + boundary + '"');
-            req.setHeader('Content-length', String.valueOf(body.length()));
-            req.setBody(body);
-            req.setMethod('POST');
-            req.setTimeout(60 * 1000);
-            HttpResponse resp = http.send(req);
-            system.debug('resp----- '+resp);
-            file = null;
-            filetype = '';
-            filename = '';
-            }
-
-      
 }

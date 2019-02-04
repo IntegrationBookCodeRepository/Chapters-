@@ -1,85 +1,72 @@
-/**
-*"LinkedProfileDetails" class contains the method
-* to call the LinkedIn API to get the basic profile
-* details of a LinkedIn account. 
-*/
 global class LinkedIn_Pro_Details_onRecord{
-
-    webService static void details(id recordid) {    
+    //method to get the LinkedIn user's basic profile info
+    webService static void details(id linkedInRecordid) {    
         
-        String endpoint  = LinkedIn_Custom_Setting__c.getInstance( 'LinkedIn Endpoint' ).Value__c;
-/**
-*HttpRequest and HttpResponse class methods
-*are used to get the data 
-*/  
+        String endpointLinkedIn  = LinkedIn_Custom_Setting__c.getInstance( 'LinkedIn Endpoint' ).Value__c;//LinkedIn endpoint to get profile info
+        Http httpcls           = new Http();
+        HttpRequest httpReqCls  = new HttpRequest();        
+        HttpResponse httpResCls = new HttPResponse();        
+        httpReqCls.setMethod( 'GET' );
+        httpReqCls.setEndpoint( endpointLinkedIn );
         
-        HttpRequest httpReq  = new HttpRequest();
-        Http http            = new Http();
-        HttpResponse httpRes = new HttPResponse();
+  //change the access token value for authHeader variable below with the access token generated in step 2
+        String authorizationHeader1 = 'Bearer AQUBTBfjLLg3XPB2uPKD617ofUgHbpfPqeZX7pE6uGpTuH5yHANNri2rVFBQYH3gKaClyPGJa7Uv90lZhjCcrK57ZveXU6Yzi6q6RFJbtgrthrrtoOYtJxzx9kuirBbMetMqdrgVhL4kDrQGaTL2iMEwT6cjgWfTDXWPxLIIsYzJoFf6xJd7gg49jjmZA3cIrfwksZoMEcBPWWC8xsm_myKpDlwk59OVPCcVYVltdqV5GAhpDJz7sOt8e6Z51DAUh8RZ9O9Ls83btlY9k4F7DQ1rFd0K717z2dHc_oN8aZFdmcJzGRbztsrlGOl7tilKWSTixOVmm-lyGYD2xiBlg';
+        httpReqCls.setHeader('Authorization', authorizationHeader1);
         
-        httpReq.setMethod( 'GET' );
-        httpReq.setEndpoint( endpoint );
+        httpResCls = httpcls.send( httpReqCls );
         
-/** Make sure to replace the access token generated in 1st step with 
-below mentioned token assigned to authorizationHeader string variable
-**/
-        String authorizationHeader = 'Bearer AQWqtD8sNPBKbufQJO373OZ_D-4NCvOBGfJIbi1i04NO4ITjr1gPZo34qYwnZIdT9_xOEugjUcq9RnQIoxNL-_cOM5W7NswmrFZQRukITU0KCmj-DPQLdk8oQuoH7JEZ67mCg2vP-EM-SaDRfetzBpGBbptJGXaE-ec9vMZX9GmPQ37f43XnlBej7iRuNJ-rBG5PEZjxH72LL-c9Hj5WlhfjpgDEEoEOmmqGm9ZygH_ExhCen6JQI9n3mFs5h72X6dyTU0Y0z2HTHWvvpg3gCwPTo62rQwtRWi-QMpUE_vj86ysj2TVm1ytyRmSZObrBXJZo4U4iHaGlOulmGDcM0WZoJt4e0g';
-        httpReq.setHeader('Authorization', authorizationHeader);
+        System.debug(httpResCls.getBody());
         
-        httpRes = http.send( httpReq );
-        
-        System.debug(httpRes.getBody());
-        
-        
-JSONParser parser = JSON.createParser(httpRes.getBody()); 
-   string firstname= '';
-   string lastname= '';
-   string Headline= '';
-   string proURL= '';   
+     // JSONParser class is used to parse the response    
+       JSONParser linkedInRespParser = JSON.createParser(httpResCls.getBody()); 
+       string firstname= '';
+       string lastname= '';
+       string Headline= '';
+       string proURL= '';   
    
-        while (parser.nextToken() != null) {
-            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
-                (parser.getText() == 'firstName')) {
+        while (linkedInRespParser.nextToken() != null) {
+            if ((linkedInRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (linkedInRespParser.getText() == 'firstName')) {
                 // Get the value.
-                parser.nextToken();                
-                firstname = parser.gettext();
+                linkedInRespParser.nextToken();                
+                firstname = linkedInRespParser.gettext();
                 
                 system.debug('firstname --------------------- '+ firstname);             
             }
             
-            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
-                (parser.getText() == 'lastName')) {
+            if ((linkedInRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (linkedInRespParser.getText() == 'lastName')) {
                 // Get the value.
-                parser.nextToken();                
-                lastname= parser.gettext();
+                linkedInRespParser.nextToken();                
+                lastname= linkedInRespParser.gettext();
                 system.debug('lastname--------------------- '+ lastname);
             }
-            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
-                (parser.getText() == 'headline')) {
+            if ((linkedInRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (linkedInRespParser.getText() == 'headline')) {
                 // Get the value.
-                parser.nextToken();                
-                Headline= parser.gettext();
+                linkedInRespParser.nextToken();                
+                Headline= linkedInRespParser.gettext();
                 system.debug('Headline--------------------- '+ Headline);
             }
-            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
-                (parser.getText() == 'url')) {
+            if ((linkedInRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (linkedInRespParser.getText() == 'url')) {
                 // Get the value.
-                parser.nextToken();                
-                proURL= parser.gettext();
+                linkedInRespParser.nextToken();                
+                proURL= linkedInRespParser.gettext();
                 
             }
         }                       
   
   
- //update the existing record with the facebook profile info as follows
-    LinkedIn_info__c LI = new LinkedIn_info__c();   
-    LI.First_Name__c= firstname;
-    LI.Headline__c= Headline;
-    LI.Last_Name__c= lastname;
-    LI.Profile_URL__c= proURL;
-            
-    LI.id = recordid;
-    update LI;   
-
+ //update the existing record with the LinkedIn profile info as follows
+        LinkedIn_info__c LI = new LinkedIn_info__c();   
+        LI.First_Name__c= firstname;
+        LI.Headline__c= Headline;
+        LI.Last_Name__c= lastname;
+        LI.Profile_URL__c= proURL;
+                
+        LI.id = linkedInRecordid;
+        update LI;   
+    
     }                                                                  
 }

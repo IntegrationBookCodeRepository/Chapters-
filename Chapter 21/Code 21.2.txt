@@ -1,11 +1,7 @@
 public class SendContactUsingRESTAPI {
-  
   private final String clientId = SFDC_Custom_Setting__c.getInstance( 'ClientId' ).Value__c;
-  
   private final String clientSecret = SFDC_Custom_Setting__c.getInstance( 'ClientSecret' ).Value__c;
- 
   private final String username = SFDC_Custom_Setting__c.getInstance( 'Username' ).Value__c;
-  
   private final String password = SFDC_Custom_Setting__c.getInstance( 'Password' ).Value__c;
  
  //wrapper class to deserialize Access Token

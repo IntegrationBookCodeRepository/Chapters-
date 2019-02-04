@@ -1,8 +1,6 @@
 public class JSON2Apex_Gmail {
         public List<Messages> Messages;
-      //  public String nextPageToken;
-      //  public Integer resultSizeEstimate;
-    
+     
 
         public class Messages {
         public String id;

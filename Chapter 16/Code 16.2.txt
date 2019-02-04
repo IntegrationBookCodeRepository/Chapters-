@@ -1,15 +1,18 @@
 @RestResource(urlMapping='/FetchContacts/*')
-	global class FetchContact
-	{
-		@HttpGet
-		global static Contact goGet()
-		{
-			Restrequest req = RestContext.request;
-			Restresponse res = RestContext.response;
-			String ContactId = req.requestURI.substring(req.requestURI.lastIndexOf('/')+1);
-			System.debug('ContactId:'+contactId);
-			Contact result = [SELECT Id, Name, Phone, Email FROM Contact WHERE Id = :contactId];
-			return result;
-	}
+global class FetchContact
+{
+@HttpGet
+
+global static Contact goGet()
+
+{
+
+Restrequest   contactreq = RestContext.request;
+Restresponse contactres = RestContext.response;
+String ContactId = contactreq.requestURI.substring(contactreq.requestURI.lastIndexOf('/')+1);
+System.debug('ContactId:'+contactId);
+Contact output = [SELECT Id, Name, Phone, Email FROM Contact WHERE Id = :contactId];
+return output;
+}
 
 }

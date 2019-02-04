@@ -3,7 +3,7 @@ global class YT_Controller {
  public static string likeCount;
  public static string dislikeCount;
  public static string viewCount;
-   public string myString{get; set;}
+public string myString{get; set;}
    public YT_Controller(){
    system.debug('myString------------- '+myString);
    } 
@@ -14,40 +14,40 @@ global class YT_Controller {
     system.debug('responseFromVf------------- '+responseFromVf);
     
     
-     JSONParser parser = JSON.createParser(responseFromVf);
+     JSONParser YTRespParser = JSON.createParser(responseFromVf);
      
-      while (parser.nextToken() != null) {
-            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
-                (parser.getText() == 'commentCount')) {
+      while (YTRespParser.nextToken() != null) {
+            if ((YTRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (YTRespParser.getText() == 'commentCount')) {
                 // Get the value.
-                parser.nextToken();                
-                commentCount = parser.getText();                
+                YTRespParser.nextToken();                
+                commentCount = YTRespParser.getText();                
                 system.debug('commentCount= ' + commentCount);
             }
-              if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
-                (parser.getText() == 'likeCount')) {
+              if ((YTRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (YTRespParser.getText() == 'likeCount')) {
                 // Get the value.
-                parser.nextToken();
+                YTRespParser.nextToken();
                 
-                likeCount = parser.getText();
+                likeCount = YTRespParser.getText();
                 
                 system.debug('likeCount= ' + likeCount);
             }
-            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
-                (parser.getText() == 'dislikeCount')) {
+            if ((YTRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (YTRespParser.getText() == 'dislikeCount')) {
                 // Get the value.
-                parser.nextToken();
+                YTRespParser.nextToken();
                 
-                dislikeCount = parser.getText();
+                dislikeCount = YTRespParser.getText();
                 
                 system.debug('dislikeCount= ' + dislikeCount);
             }
-            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
-                (parser.getText() == 'viewCount')) {
+            if ((YTRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (YTRespParser.getText() == 'viewCount')) {
                 // Get the value.
-                parser.nextToken();
+                YTRespParser.nextToken();
                 
-                viewCount = parser.getText();
+                viewCount = YTRespParser.getText();
                 
                 system.debug('viewCount= ' + viewCount);
             }
@@ -61,3 +61,4 @@ global class YT_Controller {
      insert YT;
    }
 }
+

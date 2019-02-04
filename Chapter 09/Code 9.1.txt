@@ -1,22 +1,22 @@
 global class GmailDetails{
-public static void messages(){
-        String fieldValue = '';
-        HttpRequest req= new HttpRequest();
-        Http con123 = new Http();    
+//method to get the gmail account email ids
+    public static void messages(){                
+        Http httpcls = new Http();    
+        HttpRequest httpReqCls= new HttpRequest();
+        string endPointMsg ='https://www.googleapis.com/gmail/v1/users/me/messages'; // endpoint to get the account's email ids
 
+        httpReqCls.setMethod('GET');
+        httpReqCls.setEndpoint(endPointMsg);
+        //replace the access token value after keyword 'Bearer' with the access token generated in step 2
+        string access_tok ='ya29.GlssBsopPxKcTQ5vWuY9eU9H21IA7-y5h5he5h55 22n7RstISPUVBSDeELehvsIiCuX0lqL7Di_dbSREsi9-vVRbgFKpdFRuD0K46RTHN9hNCO';
+        String authHeader = 'Bearer' + ' ' + string.valueof(access_tok);
+        httpReqCls.setHeader('Authorization', authHeader);
 
-        string userid = 'kunwar.research@gmail.com';
-        string b ='https://www.googleapis.com/gmail/v1/users/me/messages';
-
-        req.setMethod('GET');
-        req.setEndpoint(b);
-        string access_tok ='ya29.GlssBsopPxKcTQ5vWuY9eU9H21IA7-CoKftKZ2oFW5pmoIUt_MhGLw22n7RstISPUVBSDeELehvsIiCuX0lqL7Di_dbSREsi9-vVRbgFKpdFRuD0K46RTHN9hNCO';
-        String authorizationHeader = 'Bearer' + ' ' + string.valueof(access_tok);
-        req.setHeader('Authorization', authorizationHeader);
-
-        HttpResponse hs1 = con123.send(req);
-        string resp = hs1.getbody();
-        system.debug('resp----------- '+resp);
+        HttpResponse httpResCls = httpcls.send(httpReqCls);
+        string respons = httpResCls.getbody();
+        system.debug('respons----------- '+respons);
 
    }
 }
+
+

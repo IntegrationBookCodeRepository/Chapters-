@@ -1,11 +1,20 @@
-@RestResource(urlMapping='/v1/getCase/*')
-  global with sharing class getCase {
-    @Httpget
-     global static list<case> fetchCases(){
-       RestRequest req = RestContext.request;
-       RestResponse res = Restcontext.response;
-       Id conId = req.requestURI.substring(req.requestURI.lastIndexOf('/')+1);
-       list<case> caseList = [select id, subject, status, priority from case where contactid = :conId ];
-       return caseList;
-     }
-  }
+@RestResource(urlMapping='/getContacts/*')
+global class ListContacts
+{
+	@HttpGet
+	global static List<Contact>getcontact(){
+	List<Contact>Con_list;
+	try
+	{
+	Con_list = [SELECT Name, Phone FROM Contact LIMIT 5];
+	return Con_list;
+	}
+	catch (Exception excp)
+
+	{ 
+
+	system.debug('Error'+excp.getmessage());
+	}
+	return Con_list;
+	}
+}

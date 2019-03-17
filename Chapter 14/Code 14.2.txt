@@ -48,7 +48,7 @@ limitations under the License.  -->
       function initializeClient() {
         gapi.client.init({
           discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"],
-          clientId: '285775623436-vke0ardqpa63rkuc44cpnnhg7ma2lelu.apps.googleusercontent.com',
+          clientId: '282132134536-dsfdsfkk45kuc44cpnnhg7ma2lelu.apps.googleusercontent.com',
           scope: 'https://www.googleapis.com/auth/gmail.readonly'
         });
       }
@@ -79,7 +79,7 @@ limitations under the License.  -->
           
     //  invoking a method which brings the information related to an email
     //  we have passed a static id of an email as a parameter for demonstration purpose, you can make it dynamic.
-         getMessage(gmail_Id, '16648aa9b4444d5d');
+         getMessage(gmail_Id, '16348aa9bsakdns44d');
          
            } else {
           authButton.style.display = 'block';
@@ -172,4 +172,3 @@ function getMessage(userId, messageId) {
   </body>
 </html>
 </apex:page>
-

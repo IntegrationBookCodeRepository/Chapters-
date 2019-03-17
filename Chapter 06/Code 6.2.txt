@@ -1,0 +1,66 @@
+global class FB_Acc_Details_onRecord{
+    // this method is used to get the facebook user's basic profile info
+    webService static void details(String fbRecordid) {
+    String endpoint  = Facebook_Custom_Setting__c.getInstance( 'Facebook Endpoint' ).Value__c;//facebook endpoint to get profile info
+
+    HttpRequest httpReqCls  = new HttpRequest();
+    Http httpcls            = new Http();
+    HttpResponse httpResCls = new HttPResponse();
+    httpReqCls.setMethod('GET');
+    httpReqCls.setEndpoint(endpoint);
+    //replace the access token value after keyword 'Bearer' with the access token generated in step 2
+    String authHeader = 'Bearer EAAJ6yTJ5kGMBAHPPYWc2iuUViAblUClTIqFhIvQ2TDZAayNFTkeZCb6HhPWjZBOx8eIDTynCSSTwm17z69ZAR0XfNHunc69cgCCyNZABluB9JeWanfI4ueRYSnzZCqZA7cxdw47HB6Wq0XARnxJE1VpYTFAMLnoGAqNBKdaaEQbOpVzFZBUxlsvio5pmFhyZBbFLU21KXPAGM5QZDZD';
+    httpReqCls.setHeader('Authorization', authHeader);
+    httpResCls = httpcls.send( httpReqCls );
+    System.debug(httpResCls.getBody());
+    // JSONParser class is used to parse the response 
+    JSONParser FbRespParser = JSON.createParser(httpResCls.getBody()); 
+       string name = '';
+       string birthday= '';
+       string email= '';
+       string hometown= '';   
+       list<string> namelist = new list<string>();    
+        while (FbRespParser.nextToken() != null) {
+            if ((FbRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (FbRespParser.getText() == 'name')) {
+                // Get the value.
+                FbRespParser.nextToken();                
+                name = FbRespParser.gettext();
+                namelist.add(name);  
+                system.debug('hometown--------------------- '+ namelist[0]);             
+            }
+            
+            if ((FbRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (FbRespParser.getText() == 'birthday')) {
+                // Get the value.
+                FbRespParser.nextToken();                
+                birthday = FbRespParser.gettext();
+                system.debug('birthday--------------------- '+ birthday);
+            }
+            if ((FbRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (FbRespParser.getText() == 'email')) {
+                // Get the value.
+                FbRespParser.nextToken();                
+                email= FbRespParser.gettext();
+                system.debug('email--------------------- '+ email);
+            }
+            if ((FbRespParser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (FbRespParser.getText() == 'hometown')) {
+                // Get the value.
+                FbRespParser.nextToken();                
+                hometown= FbRespParser.gettext();
+                
+            }
+        }                       
+  system.debug('namelist--------------------- '+ namelist);
+  
+ //update the existing record with the facebook profile info as follows
+    FB_info__c fp = new FB_info__c();   
+    fp.Name__c= namelist[0];
+    fp.Birthdate__c = birthday;
+    fp.Email__c= email;
+    fp.Hometown__c = namelist[1];        
+    fp.id = fbRecordid;
+    update fp;   
+    }
+}

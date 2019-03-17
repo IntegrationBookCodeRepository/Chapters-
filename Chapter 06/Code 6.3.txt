@@ -1,0 +1,10 @@
+{!REQUIRESCRIPT( "/soap/ajax/35.0/connection.js" )} 
+{!REQUIRESCRIPT( "/soap/ajax/35.0/apex.js" )} 
+
+var fbvar = { 
+"fbRecordid":"{!FB_info__c.Id}" 
+} 
+
+sforce.apex.execute( "FB_Acc_Details_onRecord", "details", fbvar); 
+
+location.reload();

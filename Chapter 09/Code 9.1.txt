@@ -8,7 +8,7 @@ global class GmailDetails{
         httpReqCls.setMethod('GET');
         httpReqCls.setEndpoint(endPointMsg);
         //replace the access token value after keyword 'Bearer' with the access token generated in step 2
-        string access_tok ='ya29.GlssBsopPxKcTQ5vWuY9eU9H21IA7-y5h5he5h55 22n7RstISPUVBSDeELehvsIiCuX0lqL7Di_dbSREsi9-vVRbgFKpdFRuD0K46RTHN9hNCO';
+        string access_tok ='ya29.GlssBsopPxKcTQ5vWuY9eU9H21IA7-CoKftKZ2oFW5pmoIUt_MhGLw22n7RstISPUVBSDeELehvsIiCuX0lqL7Di_dbSREsi9-vVRbgFKpdFRuD0K46RTHN9hNCO';
         String authHeader = 'Bearer' + ' ' + string.valueof(access_tok);
         httpReqCls.setHeader('Authorization', authHeader);
 
@@ -18,5 +18,3 @@ global class GmailDetails{
 
    }
 }
-
-

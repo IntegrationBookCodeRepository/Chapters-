@@ -10,7 +10,7 @@ global class LinkedIn_Pro_Details_onRecord{
         httpReqCls.setEndpoint( endpointLinkedIn );
         
   //change the access token value for authHeader variable below with the access token generated in step 2
-        String authorizationHeader1 = 'Bearer AQUBTBfjLLg3XPB2uPKD617ofUgHbpfPqeZX7pE6uGpTuH5yHANNri2rVFBQYH3gKaClyPGJa7Uv90lZhjCcrK57ZveXU6Yzi6q6RFJbtgrthrrtoOYtJxzx9kuirBbMetMqdrgVhL4kDrQGaTL2iMEwT6cjgWfTDXWPxLIIsYzJoFf6xJd7gg49jjmZA3cIrfwksZoMEcBPWWC8xsm_myKpDlwk59OVPCcVYVltdqV5GAhpDJz7sOt8e6Z51DAUh8RZ9O9Ls83btlY9k4F7DQ1rFd0K717z2dHc_oN8aZFdmcJzGRbztsrlGOl7tilKWSTixOVmm-lyGYD2xiBlg';
+        String authorizationHeader1 = 'Bearer AQUBTBfjLLg3XPB2uPKD617ofUgHbpfPqeZX7pE6uGpTuH5yHANNri2rVFBQYH3gKaClyPGJa7Uv90lZhjCcrK57ZveXU6Yzi6q6RFJBFOwQkcippIq9SFXN1oOYtJxzx9kuirBbMetMqdrgVhL4kDrQGaTL2iMEwT6cjgWfTDXWPxLIIsYzJoFf6xJd7gg49jjmZA3cIrfwksZoMEcBPWWC8xsm_myKpDlwk59OVPCcVYVltdqV5GAhpDJz7sOt8e6Z51DAUh8RZ9O9Ls83btlY9k4F7DQ1rFd0K717z2dHc_oN8aZFdmcJzGRbztsrlGOl7tilKWSTixOVmm-lyGYD2xiBlg';
         httpReqCls.setHeader('Authorization', authorizationHeader1);
         
         httpResCls = httpcls.send( httpReqCls );

@@ -2,9 +2,9 @@
 {!REQUIRESCRIPT( "/soap/ajax/35.0/apex.js" )} 
 
 var varGmailMsg = { 
-"gmailRecordid":"{!Gmail_info__c.Id}"
+"gmailRecordid":"{!Gmail_info__c.Id}" 
 } 
 
-sforce.apex.execute ("Gmail_Details_onRecord", "fetchEmailBody", varGmailMsg); 
+sforce.apex.execute ( "Gmail_Details_onRecord", "fetchEmailBody", varGmailMsg); 
 
 location.reload();

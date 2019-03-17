@@ -17,9 +17,7 @@ public class GoogleDriveController {
            string fileContentType = 'Content-Type: '+ type+'\r\n';
            String body = delimiter + contentType +'{ "title" : "' + name + '",' + ' "mimeType" : "' + type + '" }' + delimiter + fileContentType +  'Content-Transfer-Encoding: base64\r\n' + '\r\n' + encodedBody + delimiter_close;
            string bodyLength = String.valueOf(body.length());
-
            string authorizationHeader = 'Bearer ' + 'ya29.GludBvqIY4cRgBPJiKwSoRNmua6dbkrU-n5wBrvx-xeTm_rgngtIqbqr1nU28RnLR14St41b8mBeXF8PxrYpxRulby0Dd1oZ_tRn21zrIdhcsJPvwq3H2ZnIwrOj';
-
            Http httpcls = new Http();
            HttpRequest request = new HttpRequest();
            request.setEndpoint(endpoint);

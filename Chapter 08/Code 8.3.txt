@@ -2,8 +2,8 @@
 {!REQUIRESCRIPT( "/soap/ajax/35.0/apex.js" )} 
 
 var varYT = { 
-"YTrecordid":"{!YouTube_info__c.Id}"
+"YTrecordid":"{!YouTube_info__c.Id}" 
 } 
 
 sforce.apex.execute( "YT_Video_Details_onRecord", "fetchStats", varYT); 
-location.reload(); 
+location.reload();

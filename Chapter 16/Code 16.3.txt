@@ -1,19 +1,16 @@
 @RestResource(urlMapping='/createContactRecord/*')
-global class CreateContact
-{
+global class CreateContact{
 
-@HttpPost
-global static String justPost( String Title, String Phone, String Email, String FirstName, String LastName)
-
-{
-Contact con = new Contact();
-con.Title = Title;
-con.Phone = Phone;
-con.Email = Email;
-con.FirstName = FirstName;
-con.LastName = LastName;
-insert con;
-return con.id;
-}
+	@HttpPost
+	global static String justPost( String Title, String Phone, String Email, String FirstName, String LastName){
+	Contact con = new Contact();
+	con.Title = Title;
+	con.Phone = Phone;
+	con.Email = Email;
+	con.FirstName = FirstName;
+	con.LastName = LastName;
+	insert con;
+	return con.id;
+	}
 
 }

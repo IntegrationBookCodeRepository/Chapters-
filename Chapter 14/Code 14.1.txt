@@ -13,7 +13,7 @@ public static string resp{get; set;}
     
    
     
-     /*---- method to fetch a specified email body and map it to custom object record----------*/
+     /*---------------------------------- method to fetch a specified email body and map it to custom object record------------------------------------*/
      @RemoteAction
      public static void fetchemail(string responseFromPage){
         
@@ -78,5 +78,7 @@ public static string resp{get; set;}
       GE.Body__c = body;
       insert GE;
      }
-        
+     
+ 
+      
 }

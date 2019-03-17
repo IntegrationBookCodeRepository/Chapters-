@@ -1,0 +1,19 @@
+<apex:page controller="chatterController" showHeader="false">
+ 
+ <apex:form id="allfeeds">
+  <apex:inputText value="{!feedPost}"/>  
+   <apex:commandButton value="Share Feed" action="{!postFeed}"  reRender="allfeeds" oncomplete="window.location.reload()"/>   
+ 
+ <!--Feeds rendered for a user, feedList variable gets Feeds from controller-->  
+ <apex:outputPanel >
+     <apex:pageBlock title="Feed Section">
+        <apex:pageBlockSection title="Feeds">
+             <apex:repeat value="{!feedList}" var="string">
+                 <apex:outputText value="{!string}" id="theValue"/><br/>
+             </apex:repeat>
+         </apex:pageBlockSection>             
+     </apex:pageBlock>
+ </apex:outputPanel>
+ 
+ </apex:form> 
+</apex:page>

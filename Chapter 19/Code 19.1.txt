@@ -1,0 +1,127 @@
+public class chatterController {  
+  // Replace clientId with the Consumer Key generated in Step 2.
+   private final String clientId = Chatter_Custom_Setting__c.getInstance( 'Consumer Key' ).Value__c;
+   // Replace clientSecret with the Consumer Secret generated in Step 2.
+   private final String clientSecret =  Chatter_Custom_Setting__c.getInstance( 'Consumer Secret' ).Value__c;
+   // Replace username with Source Org username
+   private final String username = Chatter_Custom_Setting__c.getInstance( 'Username' ).Value__c;
+   // Replace password with Source Org password
+   private final String password = Chatter_Custom_Setting__c.getInstance( 'Password' ).Value__c;
+   
+  //  public string feed {get; set;} 
+    public static string feedPost {get; set;} //this is to post chatter feed
+   
+    public static list<string> feedList {get; set;}
+
+
+// Constructor has the logic to display the Feeds of loggedin user
+
+    public chatterController(){   
+           String accessToken;
+           accessToken = ReturnAccessToken();           
+               if(accessToken != null){
+                   String endPoint = 'https://c.ap4.visual.force.com/services/data/v43.0/chatter/feeds/user-profile/me/feed-elements';
+                   Http httpClass = new Http();
+                   HttpRequest request = new HttpRequest();
+                   request.setHeader('Authorization','Bearer ' + accessToken);
+                   request.setHeader('Content-Type','application/json');
+                   request.setHeader('accept','application/json');           
+                   request.setMethod('GET');          
+                   request.setEndpoint(endPoint);          
+                   HttpResponse response = httpClass.send(request);
+                   system.debug('body---------- '+response.getBody());   
+               
+                   string jsonstr = ('['+response.getbody()+']');
+                   system.debug('body is--->'+response);
+                   system.debug('feed ------- '+ feedPost );
+                   system.debug(response.getbody() );
+                   system.debug(jsonstr);
+            
+     
+                  list<Deserialize> deserializedbodies = (list<Deserialize>)JSON.deserialize(jsonstr , list<Deserialize>.class);        
+                  system.debug('deserializedbodies ---------- ' +deserializedbodies );
+                  feedList= new list<string>();
+          
+                  for(Deserialize deser :deserializedbodies  ){         
+                    for(elements ele :deser.elements){
+                        if(ele.body.text != null){
+                          feedList.add(ele.body.text); 
+                           }              
+                        }
+                        system.debug('feedList--------------- '+ feedList);
+                      }                     
+                }
+    }
+
+//Method to post feed element
+    public void postFeed(){                                                            
+       system.debug('--feed---'+feedPost);
+       String accessToken;
+       accessToken = ReturnAccessToken();       
+           if(accessToken != null){
+               HttpRequest request= new HttpRequest();
+               Http httpClass = new Http();                           
+               string endpt ='https://c.ap4.visual.force.com/services/data/v43.0/chatter/feed-elements?feedElementType=FeedItem&subjectId=me+&text='+feedPost;
+               request.setMethod('POST');                           
+               request.setEndpoint(endpt);                           
+               request.setHeader('Authorization','Bearer ' + accessToken);
+               request.setHeader('Content-Type', 'application/x-www-form-urlencoded');
+                                    
+               HttpResponse response = httpClass.send(request);
+               system.debug(response.getbody());
+           }                    
+                           
+    }             
+ 
+  //wrapper class to deserialize Access Token
+  public class deserializeResponse
+   {
+      public String id;
+      public String access_token;
+   }
+   
+   // method to get the Access Token using OAuth
+  public string ReturnAccessToken(){
+          system.debug('client_id= '+clientId);
+          system.debug('username= '+username);
+          system.debug('clientSecret= '+clientSecret);
+          system.debug('password= '+password);
+          String reqbody = 'grant_type=password&client_id='+clientId+'&client_secret='+clientSecret+'&username='+username+'&password='+password;
+          system.debug('reqbody- '+reqbody);
+          Http httpClass = new Http();
+          HttpRequest request = new HttpRequest();
+          request.setBody(reqbody);
+          request.setMethod('POST');
+          request.setEndpoint('https://login.salesforce.com/services/oauth2/token');
+          HttpResponse response = httpClass.send(request);
+          system.debug('response---------- '+response);
+          deserializeResponse resp2 = (deserializeResponse)JSON.deserialize(response.getbody(),deserializeResponse.class);
+          system.debug('access token'+resp2 );   
+          return resp2.access_token;
+     
+     }
+    
+ 
+ // Wrapper class to parse the response received after hitting the url and fetch the feeds only
+  public class Deserialize{
+               
+               public string currentPageUrl;
+               public list<elements> elements;
+           
+           }
+           
+           public class elements {
+                   
+                public string visibility{get;set;}
+                public body body{get;set;}
+             
+           }
+           
+           public class body{
+               
+               public boolean isRichText{get;set;}
+               public string text{get;set;}
+           
+           }
+   
+}

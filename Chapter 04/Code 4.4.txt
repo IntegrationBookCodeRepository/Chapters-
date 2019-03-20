@@ -1,0 +1,64 @@
+global class LN_Test  {
+  
+    webService static void details() {       
+        
+ 
+        Http http  = new Http();        
+        // Create HTTP reuest to be sent 
+        HttpRequest Request_LN  = new HttpRequest();
+        
+        // Set the endpoint URL using LinkedIn API doc. Note that format=json has to be appended to get //JSON response otherwise the response is 
+        // returned in XML format
+        //String endpoint  =  'https://api.linkedin.com/v1/people/~?format=json';
+        String endpoint  =  'https://api.linkedin.com/v1/people/~'; 
+        
+        // This may be used for getting response in XML format.
+        Request_LN.setEndpoint(endpoint);
+        
+        //Set the HTTP method to GET   
+        Request_LN.setMethod('GET');
+        
+        //Use a valid access token and set the authorization header
+        String authorizationHeader = 'Bearer AQW1OLWiXWp3eOwLy_Zm2YkwOY9MBNAikYV6_giCovG0fQ1m02SjjEJj5vPCVZLgYHY2rfeGlC32oehUWLMkNX6yX5rnytni80x6cdwGJHOxOtCUESiAOsKMNqhvAqzg3B_63uTECklAFpmGZ2qbIDYBns1DkvxqTuYpSznf-kZ2Qvf3QuaLfK1cgA8d1R7xMA2vjj082v1GL0vhbOpwI2u84WVDCWNZWosky7s2V6r0ZcXCTUKnhqo_oaXrHtconLCc2IhbIQC13ZHdmBBI13Q0pUz3fyAc5GTYRgvuK330Uabi1tpyJ027NLFNDtM-Q1nqoJpw-qyRMmclP8OABnPEIiXcYQ';
+        Request_LN.setHeader('Authorization', authorizationHeader);
+        
+         
+        // Send the HTTP request and get the response.         
+
+        HttpResponse Response_LN = http.send(Request_LN);
+        System.debug(Response_LN.getBody());
+        
+        // parse result using XMLNode class and its methods.
+        Dom.Document doc = Response_LN.getBodyDocument();
+        Dom.XMLNode person = doc.getRootElement();
+        Dom.XMLNode childUrl = person.getChildElement('site-standard-profile-request', null); 
+        String url1 = childUrl.getChildElement('url', null).gettext();
+         
+        map<string, Dom.XMLNode> listring = new map<string, Dom.XMLNode>();
+        string firstName = '';
+        string lastName = '';
+        string hdLine = '';
+       
+        
+           for(Dom.XMLNode child : person.getChildElements()) {
+               listring.put(child.getName(), child);               
+                   if(listring.containskey('first-name')){
+                    Dom.XMLNode fn= listring.get('first-name');
+                     firstName = fn.getText();  
+                   }
+               if(listring.containskey('last-name')){
+                    Dom.XMLNode ln= listring.get('last-name');
+                     lastName = ln.getText();  
+                   }
+               if(listring.containskey('headline')){
+                    Dom.XMLNode hl= listring.get('headline');
+                     hdLine = hl.getText();  
+                   }
+              
+       
+        }
+        system.debug('firstName------' +firstName);
+        system.debug('lastName------' +lastName);
+        system.debug('hdLine------' +hdLine);
+        system.debug('url1------' +url1);
+   }

@@ -29,48 +29,7 @@ global class LinkedIn_Test{
     HttpResponse Response_LN = http.send(Request_LN);
 
     System.debug(Response_LN.getBody());
-
-
-    JSONParser parser = JSON.createParser(Response_LN.getBody()); 
-    string firstname= '';
-    string lastname= '';
-    string Headline= '';
-    string proURL= '';   
-    string proURL1= '';   
-
-    while (parser.nextToken() != null) {
-    if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) &&
-                    (parser.getText() == 'firstName')) {
-    // Get the value.
-    parser.nextToken();                
-    firstname = parser.gettext();
-
-    system.debug('firstname --------------------- '+ firstname);             
-                }
-
-    if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) &&
-                    (parser.getText() == 'lastName')) {
-    // Get the value.
-    parser.nextToken();                
-    lastname= parser.gettext();
-    system.debug('lastname--------------------- '+ lastname);
-                }
-    if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) &&
-                    (parser.getText() == 'headline')) {
-    // Get the value.
-    parser.nextToken();                
-                    Headline= parser.gettext();
-    system.debug('Headline--------------------- '+ Headline);
-                }
-    if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) &&
-                    (parser.getText() == 'url')) {
-    // Get the value.
-    parser.nextToken();                
-    proURL= parser.gettext();
-    system.debug('proURL--------------------- '+ proURL);
-                }
-
-            }                       
+           
 
         }                                                                  
 }

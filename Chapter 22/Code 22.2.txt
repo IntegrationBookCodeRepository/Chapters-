@@ -1,13 +1,1 @@
-// This class is to generate fake response.
-    @isTest
-global class LinkedInHttpCalloutMock implements HttpCalloutMock {
-    // Implement this interface method
-global HTTPResponse respond(HTTPRequest request) {
-        // Create a fake response
-HttpResponse response = new HttpResponse();
-response.setHeader('Content-Type', 'application/json');
-response.setBody('{"firstName": "lalit","headline": "Salesforce Developer ","id": "JVsPP_0dUU","lastName": "kumar","siteStandardProfileRequest": {"url": "https://www.linkedin.com/profile/view?id=AAoAAAebLTQBfXAT4x65zTW9wtVY83uCgKcT7Gs&authType=name&authToken=srtret&trk=api*24342495*s5651115*"}}');
-response.setStatusCode(200);
-return response; 
-    }
-}
+

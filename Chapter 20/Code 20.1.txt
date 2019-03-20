@@ -1,1 +1,117 @@
+public class linkedInController {
+public Final String redirect_URI = 'https://c.ap4.visual.force.com/apex/Dynamic_AccessToken_LinkedIn'; // access token will be returned back to this URI
+public String authCode; //this variable will hold the returned authorization code value from URL 
+public string accessToken; // this variable will hold the returned access token value
+public string clientid= LinkedIn_Custom_Setting__c.getInstance( 'Client ID' ).Value__c; //LinkedIn app clientid from app dashboard
+public string clientsecret= LinkedIn_Custom_Setting__c.getInstance( 'Client Secret' ).Value__c;//LinkedIn app clientsecret from app dashboard
 
+
+  public linkedInController (){
+  try{
+     
+        authCode = ApexPages.currentPage().getParameters().get('code');              
+    }
+    catch(exception e ){
+        System.debug('Exception: ' + e.getMessage());
+        }
+        
+    }  
+  // method to the authorization code which will be used further to get the access token
+  public PageReference AuthorizationCode(){
+  
+        String requestoAuthURL = 'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id='+clientid+'&redirect_uri='+redirect_URI+
+                                     '&state=987654321';
+        PageReference pageRef = new PageReference(requestoAuthURL);
+        return pageRef;
+    }
+    // method to get the access token
+     public void AccessToken(){
+        
+        Http httpClass = new Http();
+        HttpRequest request = new HttpRequest();               
+        String requestTokenBody = 'code='+authCode+'&grant_type=authorization_code'+
+                                    '&client_id='+clientid+'&client_secret='+clientsecret+
+                                    '&redirect_uri='+redirect_URI;
+       
+        request.setMethod('POST');
+        request.setEndpoint('https://www.linkedin.com/oauth/v2/accessToken'); //LinkedIn endpoint to get the access token
+        request.setHeader('Content-Type', 'application/x-www-form-urlencoded');
+        request.setBody(requestTokenBody);
+         HttpResponse response = httpClass.send(request);
+         system.debug(response.getBody());
+         
+          Map<String,object> accTok = (Map<String,object>)JSON.deserializeUntyped(response.getBody());
+          accessToken =String.valueOf(accTok.get('access_token'));// access token is extracted here from response body
+          system.debug('accessToken---- '+accessToken); 
+         
+        }
+        // method to get the LinkedIn basic profile info and parse it further
+        public void profileInfo(){
+        String endpoint  = LinkedIn_Custom_Setting__c.getInstance( 'LinkedIn Endpoint' ).Value__c; //LinkedIn endpoint to fetch the user basic profile info
+        Http http = new Http();
+        HttpRequest httpReq = new HttpRequest();
+        HttpResponse httpRes = new HttpResponse();
+       
+        httpReq.SetMethod('GET');
+        httpReq.setEndpoint(endpoint);
+        system.debug('accessTokennnnnn---- '+accessToken);
+        httpReq.setHeader('Authorization', 'Bearer '+accessToken);
+        httpReq.setHeader('Content-Type', 'application/json');
+        httpRes = http.send(httpReq);
+        system.debug(httpRes.getBody());
+        
+         // JSONParser class is used to parse the response 
+           JSONParser LN_Profile_parser = JSON.createParser(httpRes.getBody()); 
+           string firstname= '';
+           string lastname= '';
+           string Headline= '';
+           string proURL= '';   
+           string proURL1= '';   
+   
+        while (LN_Profile_parser.nextToken() != null) {
+        // firstName is parsed from response body
+            if ((LN_Profile_parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (LN_Profile_parser.getText() == 'firstName')) {
+                // Get the value.
+                LN_Profile_parser.nextToken();                
+                firstname = LN_Profile_parser.gettext();
+                
+                system.debug('firstname --------------------- '+ firstname);             
+            }
+          // lastName is parsed from response body  
+            if ((LN_Profile_parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (LN_Profile_parser.getText() == 'lastName')) {
+                // Get the value.
+                LN_Profile_parser.nextToken();                
+                lastname= LN_Profile_parser.gettext();
+                system.debug('lastname--------------------- '+ lastname);
+            } 
+            // headline is parsed from response body
+            if ((LN_Profile_parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (LN_Profile_parser.getText() == 'headline')) {
+                // Get the value.
+                LN_Profile_parser.nextToken();                
+                Headline= LN_Profile_parser.gettext();
+                system.debug('Headline--------------------- '+ Headline);
+            }
+            // url is parsed from response body
+            if ((LN_Profile_parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (LN_Profile_parser.getText() == 'url')) {
+                // Get the value.
+                LN_Profile_parser.nextToken();                
+                proURL= LN_Profile_parser.gettext();
+                system.debug('proURL--------------------- '+ proURL);
+            }
+          
+          }   
+          //Insert a new record using the parsed info  
+          LinkedIn_dyno__c recordInsert = new LinkedIn_dyno__c();
+          recordInsert.First_Name__c = firstname;
+          recordInsert.Last_Name__c = lastname;
+          recordInsert.Headline__c = Headline;
+          recordInsert.Profile_URL__c =  proURL;
+          insert recordInsert;
+          system.debug('Newly inserted record--- '+recordInsert);
+            
+        }
+}

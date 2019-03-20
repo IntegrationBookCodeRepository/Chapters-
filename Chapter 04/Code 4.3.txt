@@ -3,7 +3,7 @@ global class LinkedIn_Test{
   webService static void details() {       
 
 
-            Http http  =new Http();        
+    Http http  =new Http();        
     // Create HTTP reuest to be sent 
     HttpRequest Request_LN  =new HttpRequest();
 
@@ -19,7 +19,7 @@ global class LinkedIn_Test{
     Request_LN.setMethod('GET');
 
     //Use a valid access token and set the authorization header
-    String authorizationHeader = 'Bearer AQW1OLWiXWp3eOwLy_Zm2YkwOY9MBNAikYV6_giCovG0fQ1m02SjjEJj5vPCVZLgYHY2rfeGlC32oehUWLMkNX6yX5rnytni80x6cdwGJHOxOtCUESiAOsKMNqhvAqzg3B_63uTECklAFpmGZ2qbIDYBns1DkvxqTuYpSznf-kZ2Qvf3QuaLfK1cgA8d1R7xMA2vjj082v1GL0vhbOpwI2u84WVDCWNZWosky7s2V6r0ZcXCTUKnhqo_oaXrHtconLCc2IhbIQC13ZHdmBBI13Q0pUz3fyAc5GTYRgvuK330Uabi1tpyJ027NLFNDtM-Q1nqoJpw-qyRMmclP8OABnPEIiXcYQ';
+    String authorizationHeader = 'Bearer AQXqU6k0KRPBFaxfP00kPGu7P4f5-pHEDBCNZJmUu00eabyC2dDQ0wPxTonJwrBy5BCkx4qK18QdMh2D6zfQxLtSgFtT1WIsc1y0bomaBHFjnNKiLjirHglCczS-Ovm9LrX1_FvfIjXJkeOqKe9PkjXHZ03F3uxOkncP8cMHgohfCZBHRWKBe4AMiZL-s200FjGWjE9YB2e_rZ8yDP_qEv4dxyvzFrHWnwMv0S_PxlgoHDGgQKa0izELvESjyqolhovq0KcK1axVViNKQvrHviYNtQbQg0KLMoaxOXgNgTDryK-KN-3itUiCHCBq8mU-EONGhJVEz9873UCAUkohCbi_o__8QQ';
 
     Request_LN.setHeader('Authorization', authorizationHeader);
 
@@ -31,42 +31,42 @@ global class LinkedIn_Test{
     System.debug(Response_LN.getBody());
 
 
-    JSONParser parser = JSON.createParser(Response_LN.getBody()); 
+    JSONParser responseParser = JSON.createParser(Response_LN.getBody()); 
     string firstname= '';
     string lastname= '';
     string Headline= '';
     string proURL= '';   
     string proURL1= '';   
 
-    while (parser.nextToken() != null) {
-    if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) &&
-                    (parser.getText() == 'firstName')) {
+    while (responseParser.nextToken() != null) {
+    if ((responseParser.getCurrentToken() == JSONToken.FIELD_NAME) &&
+                    (responseParser.getText() == 'firstName')) {
     // Get the value.
-    parser.nextToken();                
-    firstname = parser.gettext();
+    responseParser.nextToken();                
+    firstname = responseParser.gettext();
 
     system.debug('firstname --------------------- '+ firstname);             
                 }
 
-    if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) &&
-                    (parser.getText() == 'lastName')) {
+    if ((responseParser.getCurrentToken() == JSONToken.FIELD_NAME) &&
+                    (responseParser.getText() == 'lastName')) {
     // Get the value.
-    parser.nextToken();                
-    lastname= parser.gettext();
+    responseParser.nextToken();                
+    lastname= responseParser.gettext();
     system.debug('lastname--------------------- '+ lastname);
                 }
-    if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) &&
-                    (parser.getText() == 'headline')) {
+    if ((responseParser.getCurrentToken() == JSONToken.FIELD_NAME) &&
+                    (responseParser.getText() == 'headline')) {
     // Get the value.
-    parser.nextToken();                
-                    Headline= parser.gettext();
+    responseParser.nextToken();                
+                    Headline= responseParser.gettext();
     system.debug('Headline--------------------- '+ Headline);
                 }
-    if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) &&
-                    (parser.getText() == 'url')) {
+    if ((responseParser.getCurrentToken() == JSONToken.FIELD_NAME) &&
+                    (responseParser.getText() == 'url')) {
     // Get the value.
-    parser.nextToken();                
-    proURL= parser.gettext();
+    responseParser.nextToken();                
+    proURL= responseParser.gettext();
     system.debug('proURL--------------------- '+ proURL);
                 }
 

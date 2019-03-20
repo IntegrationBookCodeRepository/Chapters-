@@ -1,1 +1,20 @@
+global class LinkedinProfileDetails2 {
+   //method to get the LinkedIn user's basic profile info
+    webService static void details() {    
 
+        String endpointLinkedIn  = LinkedIn_Custom_Setting__c.getInstance( 'LinkedIn Endpoint' ).Value__c; //LinkedIn endpoint to get profile info   
+
+        Http httpcls            = new Http();
+        HttpRequest httpReqCls  = new HttpRequest();       
+        HttpResponse httpResCls = new HttPResponse();
+        httpReqCls.setMethod( 'GET' );
+        httpReqCls.setEndpoint( endpointLinkedIn );
+
+       //replace the access token value after keyword 'Bearer' with the access token generated in step 2
+        String authHeader = 'Bearer AQWjznKYRQSWKWN6P3amD3gr0t4niJV91U2JqUiGw_ZdU57i2oTKywHxuOb63442bcSb71O2nJ5QR_cYLGatZinABNB83gz9jXQA1OH_GjaZU6CQaCdf-6JWRnSiSoU9Z0VZTIxnhm7L6nqX0KHZ30yyV9qdhP57foQrBX4HWs-r3VnKdPJIHC41frxVTRbLHAG1hpa1Gvt3vLyVWJAexUfLTlt8K9JOh_DCSCbZOzPbprF3y6uC1G6RZjM4W1_D5sG_yG5MEebyPNU8xErVBF6nZ3t2NJc4tDA3Ci8XFoByCxqLzmMayAzG7zba07-YF9HzeCjIDeExgqJqNSeTlTwj2n0nJA';
+        httpReqCls.setHeader('Authorization', authHeader);
+        httpResCls = httpcls.send( httpReqCls );
+        System.debug(httpResCls.getBody());
+
+    }                                                                  
+}

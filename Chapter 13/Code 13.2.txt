@@ -54,7 +54,7 @@ limitations under the License.  -->
             // The space-delimited list of access scopes is represented by the 'scope' field
         
             gapi.client.init({
-                'clientId': '1073987654457505-oknsdfnknjj2334324nnjttlsrph43c.apps.googleusercontent.com',
+                'clientId': '1073987654457505-oknsdff4t4f4gt43c.apps.googleusercontent.com',
                 'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'],
                 'scope': 'https://www.googleapis.com/auth/youtube.force-ssl https://www.googleapis.com/auth/youtubepartner'
             }).then(function () {

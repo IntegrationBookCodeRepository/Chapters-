@@ -5,7 +5,7 @@
        <!-- CDN to reference the LinkedIn Javascript SDK     -->
         <script type="text/javascript" src="//platform.linkedin.com/in.js">
         
-        api_key:   81i7a53342343jrjr
+        api_key:   81i7a53rjr
         lang:      en_US
         authorize: true 
         </script>

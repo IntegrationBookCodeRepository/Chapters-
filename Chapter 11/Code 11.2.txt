@@ -15,7 +15,7 @@
             // (ii) Initiate and setup the Facebook Javascript SDK using FB.init () method
             
             FB.init({
-            appId      : '549742655463212', // App ID from the App Dashboard
+            appId      : '54974263212', // App ID from the App Dashboard
             version    : 'v2.10',
             channelUrl : '/resource/alljs', 
             status     : true, // it is to check the login status on sdk initialization

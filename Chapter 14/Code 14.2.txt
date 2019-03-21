@@ -48,7 +48,7 @@ limitations under the License.  -->
       function initializeClient() {
         gapi.client.init({
           discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"],
-          clientId: '282132134536-dsfdsfkk45kuc44cpnnhg7ma2lelu.apps.googleusercontent.com',
+          clientId: '282132134536-dsfdshrhrhrrhg7ma2lelu.apps.googleusercontent.com',
           scope: 'https://www.googleapis.com/auth/gmail.readonly'
         });
       }

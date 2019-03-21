@@ -51,7 +51,7 @@ limitations under the License. -->
        */
       function initializeClient() {
         gapi.client.init({    
-          clientId: '849709288554-dr1mj1bs2dqh99fj1rsnffraa04vulup.apps.googleusercontent.com',
+          clientId: '849709288554-dr1mj1bs2dqh99trhshrhrthapps.googleusercontent.com',
           discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
           scope: 'https://www.googleapis.com/auth/drive'
         });

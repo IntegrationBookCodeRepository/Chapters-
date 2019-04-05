@@ -3,40 +3,20 @@
     httprequest.setEndpoint('https://th-apex-http-callout.herokuapp.com/animals');
     httprequest.setMethod('GET');
     HttpResponse response = http.send(httprequest);
-    // parse the JSON response 
-    if (response.getStatusCode() == 200) {
-        // Used JSONparser class to find animal in the array received in JSON response
-       JSONParser animal1 = JSON.createParser(response.getBody()); 	
-        animal1.nextToken();
-        animal1.nextToken();
-        animal1.nextToken();
-        animal1.nextToken();    
-        system.debug('resp-----'+animal1.getText());
-        JSONParser animal2 = JSON.createParser(response.getBody());
-        animal2.nextToken();
-        animal2.nextToken();
-        animal2.nextToken();
-        animal2.nextToken();
-        animal2.nextToken();
-        system.debug('resp-----'+animal2.getText());
-        JSONParser animal3= JSON.createParser(response.getBody());
-        animal3.nextToken();
-        animal3.nextToken();
-        animal3.nextToken();
-        animal3.nextToken();
-        animal3.nextToken();
-        animal3.nextToken();
-        system.debug('resp-----'+animal3.getText());
-        JSONParser animal4= JSON.createParser(response.getBody());
-        animal4.nextToken();
-        animal4.nextToken();
-        animal4.nextToken();
-        animal4.nextToken();
-        animal4.nextToken();
-        animal4.nextToken();
-        animal4.nextToken();
-        system.debug('resp-----'+animal4.getText());
     
+// Check the status code	
+    if (response.getStatusCode() == 200){
+// use JSON.desrialize and use the animalList wrapper as an Apex object type       
+	   animalList deserializedAnimalList = (animalList)JSON.deserialize(response.getbody(), animalList.class);
+        system.debug('deserializedAnimalList--- '+deserializedAnimalList.animals);
+        list<string> animals = deserializedAnimalList.animals;
+        for(string animal :animals){
+             system.debug(animal);
+        }
+         
     }
-    
-    
+	
+// created a wrapper to deserialize the animal List
+public class animalList {
+    public List<string> animals;   
+} 
